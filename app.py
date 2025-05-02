@@ -35,19 +35,36 @@ def call(link_id):
     phone = entry["phone"]
 
     # Возвращаем HTML с задержкой редиректа
-    return render_template_string("""
-    <!DOCTYPE html>
-    <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <title>Звонок</title>
-        <meta http-equiv="refresh" content="2;url=tel:{{ phone }}">
-        <style>
-            body { font-family: sans-serif; background: #111; color: #eee; text-align: center; margin-top: 20%; }
-        </style>
-    </head>
-    <body>
-        <h1>⏳ Выполняется звонок...</h1>
-    </body>
-    </html>
-    """, phone=phone)
+   return render_template_string("""
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Маркер активирован</title>
+    <meta http-equiv="refresh" content="2;url=tel:{{ phone }}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0f0f0f;
+            color: #00ffe1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <h1>💠 Один звонок.<br>Один долг.<br>Он не повторится.</h1>
+</body>
+</html>
+""", phone=phone)
