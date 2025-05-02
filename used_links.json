@@ -1,12 +1,4 @@
 {
   "abc123": {
-    "phone": "+1234567890",
-    "used": true
-  },
-  "uzb001": {
-    "phone": "+998901000088",
-    "used": true
-  },
-  "uzb002": {
     "phone": "+998901000088",
     "used": false
