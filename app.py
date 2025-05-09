@@ -4,25 +4,26 @@ import os
 import requests
 
 app = Flask(__name__)
-
 DATA_FILE = "used_links.json"
-API_KEY = "148ad449-80ea-4998-90f7-34c444a30f00"  # Подставь свой ключ
-ACCOUNT_ID = 9709765
-APPLICATION_ID = 11849228
-RULE_ID = "relay_call"  # Убедись, что название правила точно такое
 
-def start_voximplant_call(phone_number):
-    url = "https://api.voximplant.com/platform_api/StartScenarios/"
-    params = {
-        "account_id": ACCOUNT_ID,
-        "api_key": API_KEY,
-        "application_id": APPLICATION_ID,
-        "rule_id": RULE_ID,
-        "script_custom_data": phone_number,
-        "phone": phone_number
+# === Voximplant параметры ===
+VOXIMPLANT_ACCOUNT_ID = "9709765"
+VOXIMPLANT_API_KEY = "148ad449-80ea-4998-90f7-34c444a30f00"
+VOXIMPLANT_APPLICATION_ID = "11849228"
+VOXIMPLANT_RULE_ID = "3757262"
+
+def make_voximplant_call(to_number):
+    api_url = "https://api.voximplant.com/platform_api/StartScenarios/"
+    payload = {
+        "account_id": VOXIMPLANT_ACCOUNT_ID,
+        "api_key": VOXIMPLANT_API_KEY,
+        "rule_id": VOXIMPLANT_RULE_ID,
+        "script_custom_data": json.dumps({"to": to_number}),
+        "application_id": VOXIMPLANT_APPLICATION_ID
     }
-    response = requests.post(url, data=params)
-    return response.ok
+    response = requests.post(api_url, data=payload)
+    return response.json()
+
 
 @app.route('/call/<link_id>')
 def call(link_id):
@@ -43,14 +44,12 @@ def call(link_id):
     if entry["used"]:
         return "Ссылка уже использована.", 410
 
-    # Попытка звонка
-    success = start_voximplant_call(entry["phone"])
-    if not success:
-        return "Ошибка при запуске звонка через Voximplant", 502
-
     entry["used"] = True
     with open(DATA_FILE, "w") as f:
         json.dump(links, f, indent=2)
+
+    phone = entry["phone"]
+    result = make_voximplant_call(phone)
 
     return render_template_string("""
     <!DOCTYPE html>
